@@ -96,6 +96,7 @@ cp templates/task-spec.md task-spec.md
 ```
 
 Then open Claude Code and say:
+
 ```
 Run the pipeline on task-spec.md
 ```
@@ -120,15 +121,15 @@ Claude will ask you to confirm the objective and acceptance criteria before star
 
 ## File Reference
 
-| File | Purpose |
-|------|---------|
-| `CLAUDE.md` | Orchestration rules + project-specific context — loaded automatically by Claude Code |
-| `prompts/architect.md` | System prompt for the Architect agent (design only, no code) |
-| `prompts/coder.md` | System prompt for the Coder agent (implementation + tests) |
-| `prompts/reviewer.md` | System prompt for the Reviewer agent (APPROVE / REJECT) |
-| `prompts/docs.md` | System prompt for the Docs agent (inline docs + PR summary) |
-| `templates/task-spec.md` | Blank task input template — copy and fill in per task |
-| `docs/runbook.md` | Auto-maintained runbook — Docs agent appends an entry after each approved task |
+| File                     | Purpose                                                                              |
+| ------------------------ | ------------------------------------------------------------------------------------ |
+| `CLAUDE.md`              | Orchestration rules + project-specific context — loaded automatically by Claude Code |
+| `prompts/architect.md`   | System prompt for the Architect agent (design only, no code)                         |
+| `prompts/coder.md`       | System prompt for the Coder agent (implementation + tests)                           |
+| `prompts/reviewer.md`    | System prompt for the Reviewer agent (APPROVE / REJECT)                              |
+| `prompts/docs.md`        | System prompt for the Docs agent (inline docs + PR summary)                          |
+| `templates/task-spec.md` | Blank task input template — copy and fill in per task                                |
+| `docs/runbook.md`        | Auto-maintained runbook — Docs agent appends an entry after each approved task       |
 
 ---
 
@@ -136,13 +137,13 @@ Claude will ask you to confirm the objective and acceptance criteria before star
 
 All agent behaviour is controlled by the prompt files in `prompts/`. Edit them, commit, and everyone on the team picks up the change on next pull.
 
-| What you want to change | Where to change it |
-|------------------------|-------------------|
-| Quality bar for code review | `prompts/reviewer.md` — Approval Standard section |
-| What tests are required | `prompts/coder.md` — Quality Bar section |
-| PR description format | `prompts/docs.md` — PR Summary section |
-| Branch naming convention | `CLAUDE.md` — Step 5 |
-| Project tech stack / conventions | `CLAUDE.md` — Project-Specific Context section |
+| What you want to change          | Where to change it                                |
+| -------------------------------- | ------------------------------------------------- |
+| Quality bar for code review      | `prompts/reviewer.md` — Approval Standard section |
+| What tests are required          | `prompts/coder.md` — Quality Bar section          |
+| PR description format            | `prompts/docs.md` — PR Summary section            |
+| Branch naming convention         | `CLAUDE.md` — Step 5                              |
+| Project tech stack / conventions | `CLAUDE.md` — Project-Specific Context section    |
 
 ---
 

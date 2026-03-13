@@ -25,11 +25,13 @@ Branch Setup → ARCHITECT → CODER → REVIEWER (loop max 3x) → DOCS → PR 
 
 **Access & prerequisites check (new projects only):**
 If `project_setup.type = new`, before running any agent, inspect the stack and identify anything the human must provide or confirm:
+
 - Third-party API keys or credentials needed at runtime (e.g. email provider, payment gateway, auth service)
 - Environment variables that cannot be auto-generated (e.g. `DATABASE_URL`, `STRIPE_SECRET_KEY`)
 - Any service accounts, OAuth apps, or external accounts that must be created first
 
 If any of the above are needed, **pause and ask the human** before proceeding:
+
 ```
 ⚠️  Before I start — I need a few things from you:
   1. {What is needed and why}
@@ -37,6 +39,7 @@ If any of the above are needed, **pause and ask the human** before proceeding:
 These will be added to .env.example. You can provide dummy values now for local dev.
 Shall I proceed with placeholders, or do you want to provide the real values first?
 ```
+
 Only continue after the human responds (placeholders are fine to unblock the pipeline).
 
 ### 0.5. Branch Setup
@@ -55,20 +58,25 @@ Before any agent runs, create a working branch from the latest default branch:
 3. Determine the branch name using this priority order:
 
    **If the task has a `ticket_id`** (e.g. from JIRA, GitHub, Linear):
+
    ```
    {ticket_id}-{task-slug}
    ```
+
    - `ticket_id` — from the task spec `ticket_id` field, or extracted from the source URL (e.g. `PROJ-122`, `GH-45`)
    - `task-slug` — the objective lowercased, spaces replaced with hyphens, max 40 chars
    - Example: `PROJ-122-fix-habits-reset`, `GH-45-add-contact-form`
 
    **If there is no ticket ID:**
+
    ```
    {owner}/{task-slug}
    ```
+
    - Example: `dev-1/contact-us-form`
 
 4. Create the branch:
+
    ```bash
    git checkout -b {branch-name}
    ```
@@ -86,10 +94,12 @@ All code changes by the Coder and Docs agents are applied to this branch.
 Spawn a subagent using `prompts/architect.md` as its system prompt.
 
 Pass it:
+
 - The full `TASK` (objective, acceptance criteria, codebase context, constraints)
 - Contents of all files listed in `codebase_context`
 
 Expect back: a **Design Document** with:
+
 - Files to create/modify and why
 - Integration points and data flow
 - Key architectural decisions with rationale
@@ -102,6 +112,7 @@ Store output as `DESIGN_DOC`.
 Spawn a subagent using `prompts/coder.md` as its system prompt.
 
 Pass it:
+
 - `TASK`
 - `DESIGN_DOC`
 - Contents of all files in `codebase_context`
@@ -115,6 +126,7 @@ Store output as `CODE_DIFF` and apply the changes to disk.
 Spawn a subagent using `prompts/reviewer.md` as its system prompt.
 
 Pass it:
+
 - `TASK` (especially acceptance criteria)
 - `DESIGN_DOC`
 - `CODE_DIFF`
@@ -124,6 +136,7 @@ Expect back: `VERDICT: APPROVE` or `VERDICT: REJECT`
 **If APPROVE:** proceed to Step 4.
 
 **If REJECT:**
+
 - Reviewer must provide numbered remediation instructions.
 - Pass those instructions back to the Coder agent (re-run Step 2 with the remediation notes appended).
 - Track loop count. **Maximum 3 reject/retry loops.**
@@ -134,11 +147,13 @@ Expect back: `VERDICT: APPROVE` or `VERDICT: REJECT`
 Spawn a subagent using `prompts/docs.md` as its system prompt.
 
 Pass it:
+
 - `TASK`
 - `DESIGN_DOC`
 - Approved `CODE_DIFF`
 
 Expect back:
+
 - Inline code comments/docstrings (applied to disk)
 - A runbook entry (appended to `docs/runbook.md` if it exists)
 - A PR summary (title + description body)
@@ -173,6 +188,7 @@ Shall I open this PR? (yes / no / edit)
 ### 6. GitHub Pull Request
 
 After human confirms:
+
 1. Stage and commit all changes on the current task branch:
    ```bash
    git add <files changed/created>
@@ -217,6 +233,7 @@ Keep an internal counter `REJECT_COUNT` starting at 0. Increment on each REJECT 
 > **Team instruction:** Fill in this section once per project. Commit it. Every team member and every agent run will automatically have this context. Do not leave it blank — the agents will make better decisions with it.
 
 ### Tech Stack
+
 - Language / runtime: _e.g. Python 3.12 / Node 20 / Go 1.22_
 - Framework: _e.g. FastAPI / Next.js / Gin_
 - Database: _e.g. PostgreSQL 15 via SQLAlchemy_
@@ -224,6 +241,7 @@ Keep an internal counter `REJECT_COUNT` starting at 0. Increment on each REJECT 
 - Package manager: _e.g. pip + requirements.txt / pnpm / go mod_
 
 ### Repo Layout
+
 ```
 # Describe the key directories so agents know where to look
 # e.g.
@@ -233,19 +251,23 @@ Keep an internal counter `REJECT_COUNT` starting at 0. Increment on each REJECT 
 ```
 
 ### Code Conventions
+
 - _e.g. snake_case for Python, camelCase for JS_
 - _e.g. All API routes live in src/routes/, one file per resource_
 - _e.g. No inline SQL — always use the ORM_
 
 ### Key Constraints (Project-Wide)
+
 - _e.g. Never modify database migrations directly — always generate via Alembic_
 - _e.g. All external HTTP calls must go through src/clients/ — no raw requests elsewhere_
 - _e.g. Secrets via environment variables only — never hardcoded_
 
 ### CI / Quality Gates
+
 - _e.g. All PRs must pass: pytest, ruff, mypy_
 - _e.g. Test coverage must not drop below 80%_
 
 ### GitHub Config
+
 - Default base branch: `main`
 - PR reviewers: _e.g. @talha, @backend-team_

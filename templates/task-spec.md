@@ -30,7 +30,6 @@ source_url: >
   # If provided, Claude will fetch it for additional context.
   # Example: https://yourproject.atlassian.net/browse/PROJ-122
 # ──────────────────────────────────────────────────────────────────────────────
-
 # ─── Project Setup ────────────────────────────────────────────────────────────
 # Fill in ONE of the two sections below, then delete the other.
 
@@ -38,11 +37,11 @@ source_url: >
 project_setup:
   type: new
   stack:
-    framework:        # nextjs-15 | nextjs-14 | react-vite | express | fastapi | django | ...
-    language:         # typescript | javascript | python | go
-    styling:          # tailwindcss-v4 | tailwindcss-v3 | css-modules | styled-components | none
-    package_manager:  # npm | yarn | pnpm | pip | go mod
-    runtime:          # node-20 | node-22 | python-3.12 | go-1.22
+    framework: # nextjs-15 | nextjs-14 | react-vite | express | fastapi | django | ...
+    language: # typescript | javascript | python | go
+    styling: # tailwindcss-v4 | tailwindcss-v3 | css-modules | styled-components | none
+    package_manager: # npm | yarn | pnpm | pip | go mod
+    runtime: # node-20 | node-22 | python-3.12 | go-1.22
   output_directory: >
     # Where to create the project, relative to the repo root.
     # Example: projects/my-app
@@ -89,10 +88,9 @@ output_format: >
   # For a new project, list ALL required files including config, layout, README, .env.example
   # For an existing project, list only the files modified/created.
 
-priority: medium  # low | medium | high
+priority: medium # low | medium | high
 
 notes: >
   # Anything else the agents should know.
   # Edge cases, known gotchas, related PRs, deployment notes, etc.
-
 ---
