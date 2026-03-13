@@ -34,6 +34,7 @@ You must create **every file** needed — including but not limited to:
 | Home page with link/reference to the feature | Navigability |
 | Test config (`jest.config.ts`, `jest.setup.ts`, `pytest.ini`, etc.) | Test runner setup |
 | `.env.example` | Documents every required environment variable with a description and example value |
+| `.gitignore` | Ignores build output, dependencies, local env files, OS/editor artifacts |
 | `README.md` | Full local setup guide (see below) |
 
 **`.env.example` rules:**
