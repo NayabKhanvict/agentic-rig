@@ -9,7 +9,7 @@ When a team member gives you a task (via a filled-in `templates/task-spec.md`, a
 ## Pipeline Overview
 
 ```
-ARCHITECT → CODER → REVIEWER (loop max 3x) → DOCS → GitHub PR
+Branch Setup → ARCHITECT → CODER → REVIEWER (loop max 3x) → DOCS → PR Confirmation → GitHub PR (→ main/master)
 ```
 
 ---
@@ -22,6 +22,35 @@ ARCHITECT → CODER → REVIEWER (loop max 3x) → DOCS → GitHub PR
 - If the input is a **task-spec.md** — read it directly.
 - If the input is a **plain description** — ask the user to confirm the objective and acceptance criteria before proceeding.
 - Store all extracted task fields in memory as `TASK` for the rest of the pipeline.
+
+### 0.5. Branch Setup
+
+Before any agent runs, create a working branch from the latest default branch:
+
+1. Detect the default branch — check for `main` first, then `master`:
+   ```bash
+   git remote show origin | grep 'HEAD branch'
+   ```
+2. Switch to it and pull the latest changes:
+   ```bash
+   git checkout main          # or master
+   git pull origin main       # or master
+   ```
+3. Create the task branch from this up-to-date base:
+   ```bash
+   git checkout -b agent/{owner}/{task-slug}
+   ```
+   - `owner` — from the task spec `owner` field
+   - `task-slug` — the objective lowercased, spaces replaced with hyphens, max 50 chars
+   - Example: `agent/dev-1/contact-us-form`
+
+4. Confirm the branch is clean (`git status`) before proceeding.
+
+**If the branch already exists:** append a short timestamp suffix (`-YYYYMMDD`) rather than overwriting it.
+
+**If the repo has no remote:** create the branch locally and skip the pull step. Flag this to the human.
+
+All code changes by the Coder and Docs agents are applied to this branch.
 
 ### 1. Architect Agent
 
@@ -85,13 +114,50 @@ Expect back:
 - A runbook entry (appended to `docs/runbook.md` if it exists)
 - A PR summary (title + description body)
 
-### 5. GitHub Pull Request
+### 5. PR Confirmation
 
-After Docs agent completes:
-1. Create a new branch: `agent/{owner}/{task-slug}` (use `owner` field from task spec, slugify the objective)
-2. Stage and commit all changes with message: `{objective} [agentic-rig]`
-3. Open a PR using `gh pr create` with the title and description from the Docs agent
-4. Report the PR URL to the human
+Before opening the PR, present the following to the human and **wait for explicit approval**:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅  Pipeline complete — ready to open PR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Branch:  agent/{owner}/{task-slug}
+Title:   {PR title from Docs agent}
+
+Description:
+{Full PR description from Docs agent}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Shall I open this PR? (yes / no / edit)
+```
+
+- **yes** — proceed to Step 6.
+- **no** — discard, report what was built, stop.
+- **edit** — accept revised title/description from the human, then proceed.
+
+### 6. GitHub Pull Request
+
+After human confirms:
+1. Stage and commit all changes on the current task branch:
+   ```bash
+   git add <files changed/created>
+   git commit -m "{objective} [agentic-rig]"
+   ```
+2. Push the branch to origin:
+   ```bash
+   git push origin agent/{owner}/{task-slug}
+   ```
+3. Open a PR targeting the default branch (`main` or `master`):
+   ```bash
+   gh pr create \
+     --base main \
+     --head agent/{owner}/{task-slug} \
+     --title "{confirmed PR title}" \
+     --body "{confirmed PR description}"
+   ```
+4. Report the PR URL to the human.
 
 ---
 
