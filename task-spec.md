@@ -72,9 +72,6 @@ required_access:
   #   where_to_get: https://app.sendgrid.com/settings/api_keys
 
 notes: >
-  This is a demo task to validate the agentic pipeline end-to-end.
-  The goal is a clean, production-quality implementation that runs locally
-  out of the box with `npm install && npm run dev`.
   Tailwind CSS v4 uses CSS-first config — import via `@import "tailwindcss"`
   in globals.css, no tailwind.config.js needed.
   The Coder agent must scaffold ALL files listed in output_format so the
