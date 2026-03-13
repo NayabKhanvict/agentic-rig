@@ -1,0 +1,47 @@
+/*
+ * globals.css — Tailwind v4 entry point and global theme tokens.
+ *
+ * Tailwind v4 uses a CSS-first configuration model: design tokens are declared
+ * here as custom properties inside @theme rather than in tailwind.config.js.
+ * This file is imported once in app/layout.tsx and applies to all pages.
+ *
+ * Brand colour palette:
+ *   --color-brand-primary   #6366f1  (indigo-500)  — primary CTAs, active states
+ *   --color-brand-secondary #8b5cf6  (violet-500)  — gradient end, accents
+ *   --color-brand-accent    #ec4899  (pink-500)    — hero gradient highlight
+ *   --color-brand-dark      #0f172a  (slate-900)   — hero background start
+ *
+ * These tokens are defined here for consistency but components currently use
+ * the hex values directly in inline styles (gradients). If you switch to using
+ * Tailwind utility classes for these values, reference them as
+ * `text-brand-primary`, `bg-brand-secondary`, etc.
+ */
+
+@import "tailwindcss";
+
+@theme {
+  --color-brand-primary: #6366f1;
+  --color-brand-secondary: #8b5cf6;
+  --color-brand-accent: #ec4899;
+  --color-brand-dark: #0f172a;
+  --font-family-sans: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+/* Ensure consistent box model across all elements */
+* {
+  box-sizing: border-box;
+}
+
+/*
+ * Smooth scrolling enables the anchor-based navigation between sections
+ * (Hero CTAs → #products / #categories, PromoBanner CTA → #products).
+ * Users who prefer reduced motion will still experience instant jumps because
+ * browsers respect prefers-reduced-motion for scroll-behavior.
+ */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-family-sans);
+}
