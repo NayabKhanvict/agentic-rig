@@ -1,4 +1,4 @@
-# TopTechHouse — Agentic Developer Rig
+# Agentic Rig — Multi-Agent Developer Pipeline
 
 A multi-agent development pipeline built on Claude Code.
 

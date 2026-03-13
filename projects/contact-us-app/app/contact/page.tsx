@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ContactForm from "./ContactForm";
 
 export const metadata: Metadata = {
-  title: "Contact Us | TopTechHouse",
+  title: "Contact Us |  Agentic Rig",
   description: "Send us a message and we'll get back to you shortly.",
 };
 

@@ -1,4 +1,4 @@
-# TopTechHouse — Runbook
+# Agentic Rig — Runbook
 
 This file is maintained by the Docs agent. Each time the pipeline ships a feature, an entry is appended here automatically.
 

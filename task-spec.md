@@ -58,7 +58,7 @@ output_format: >
     - jest.setup.ts
     - README.md                            (prerequisites, install steps, run command, test command)
 
-ticket_id: TTH-1
+ticket_id: AG-1
 
 owner: dev-1
 

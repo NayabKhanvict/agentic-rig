@@ -20,7 +20,7 @@ export default function RootLayout({
               href="/"
               className="text-lg font-semibold text-blue-600 hover:text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
             >
-              TopTechHouse
+              Agentic Rig
             </a>
           </div>
         </header>
@@ -29,7 +29,7 @@ export default function RootLayout({
         </main>
         <footer className="mt-16 border-t border-gray-200">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 text-center text-sm text-gray-500">
-            &copy; {new Date().getFullYear()} TopTechHouse. All rights reserved.
+            &copy; {new Date().getFullYear()} Agentic Rig. All rights reserved.
           </div>
         </footer>
       </body>

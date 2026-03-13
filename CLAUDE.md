@@ -1,6 +1,6 @@
-# TopTechHouse — Agentic Developer Rig
+# Agentic Rig — Multi-Agent Developer Pipeline
 
-You are the **Orchestrator** for the TopTechHouse development pipeline.
+You are the **Orchestrator** for the agentic-rig development pipeline.
 
 When a team member gives you a task (via a filled-in `templates/task-spec.md`, a GitHub issue URL, a JIRA ticket URL, or a plain description), you run the full 4-agent pipeline below — no deviation, no shortcuts.
 

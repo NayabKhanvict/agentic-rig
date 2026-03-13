@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <div className="text-center py-20">
       <h1 className="text-4xl font-bold text-gray-900 mb-4">
-        Welcome to TopTechHouse
+        Welcome to Agentic Rig
       </h1>
       <p className="text-lg text-gray-600 mb-8 max-w-xl mx-auto">
         We build great software. Have a question or want to work with us?

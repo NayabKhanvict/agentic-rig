@@ -17,7 +17,7 @@ acceptance_criteria:
 ticket_id: >
   # The ticket or issue number from your project tracker.
   # This becomes the branch name prefix: {PROJECT}-122-fix-habits-reset
-  # Examples: PROJ-122  |  GH-45  |  LIN-9  |  TTH-7
+  # Examples: PROJ-122  |  GH-45  |  LIN-9  |  AG-7
   # Leave blank if there is no ticket — branch will use owner/task-slug instead.
 
 owner: >
