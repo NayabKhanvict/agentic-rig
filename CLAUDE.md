@@ -18,10 +18,26 @@ Branch Setup → ARCHITECT → CODER → REVIEWER (loop max 3x) → DOCS → PR 
 
 ### 0. Task Intake
 
-- If the input is a **URL** (GitHub issue, JIRA, Linear, etc.) — fetch it and extract: objective, acceptance criteria, affected files, constraints.
+- If the input is a **URL** (GitHub issue, JIRA, Linear, etc.) — fetch it and extract: objective, acceptance criteria, affected files, constraints, and ticket ID.
 - If the input is a **task-spec.md** — read it directly.
 - If the input is a **plain description** — ask the user to confirm the objective and acceptance criteria before proceeding.
 - Store all extracted task fields in memory as `TASK` for the rest of the pipeline.
+
+**Access & prerequisites check (new projects only):**
+If `project_setup.type = new`, before running any agent, inspect the stack and identify anything the human must provide or confirm:
+- Third-party API keys or credentials needed at runtime (e.g. email provider, payment gateway, auth service)
+- Environment variables that cannot be auto-generated (e.g. `DATABASE_URL`, `STRIPE_SECRET_KEY`)
+- Any service accounts, OAuth apps, or external accounts that must be created first
+
+If any of the above are needed, **pause and ask the human** before proceeding:
+```
+⚠️  Before I start — I need a few things from you:
+  1. {What is needed and why}
+  2. {What is needed and why}
+These will be added to .env.example. You can provide dummy values now for local dev.
+Shall I proceed with placeholders, or do you want to provide the real values first?
+```
+Only continue after the human responds (placeholders are fine to unblock the pipeline).
 
 ### 0.5. Branch Setup
 
@@ -36,15 +52,28 @@ Before any agent runs, create a working branch from the latest default branch:
    git checkout main          # or master
    git pull origin main       # or master
    ```
-3. Create the task branch from this up-to-date base:
-   ```bash
-   git checkout -b agent/{owner}/{task-slug}
-   ```
-   - `owner` — from the task spec `owner` field
-   - `task-slug` — the objective lowercased, spaces replaced with hyphens, max 50 chars
-   - Example: `agent/dev-1/contact-us-form`
+3. Determine the branch name using this priority order:
 
-4. Confirm the branch is clean (`git status`) before proceeding.
+   **If the task has a `ticket_id`** (e.g. from JIRA, GitHub, Linear):
+   ```
+   {ticket_id}-{task-slug}
+   ```
+   - `ticket_id` — from the task spec `ticket_id` field, or extracted from the source URL (e.g. `PROJ-122`, `GH-45`)
+   - `task-slug` — the objective lowercased, spaces replaced with hyphens, max 40 chars
+   - Example: `PROJ-122-fix-habits-reset`, `GH-45-add-contact-form`
+
+   **If there is no ticket ID:**
+   ```
+   {owner}/{task-slug}
+   ```
+   - Example: `dev-1/contact-us-form`
+
+4. Create the branch:
+   ```bash
+   git checkout -b {branch-name}
+   ```
+
+5. Confirm the branch is clean (`git status`) before proceeding.
 
 **If the branch already exists:** append a short timestamp suffix (`-YYYYMMDD`) rather than overwriting it.
 
@@ -123,11 +152,15 @@ Before opening the PR, present the following to the human and **wait for explici
 ✅  Pipeline complete — ready to open PR
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Branch:  agent/{owner}/{task-slug}
+Branch:  {branch-name}
+Base:    main (or master)
 Title:   {PR title from Docs agent}
 
 Description:
 {Full PR description from Docs agent}
+
+⚠️  Required before merging:
+{List any env vars, secrets, or access the human must set up — from Coder agent output}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Shall I open this PR? (yes / no / edit)
@@ -143,17 +176,18 @@ After human confirms:
 1. Stage and commit all changes on the current task branch:
    ```bash
    git add <files changed/created>
-   git commit -m "{objective} [agentic-rig]"
+   git commit -m "{ticket_id}: {objective} [agentic-rig]"
+   # If no ticket_id: git commit -m "{objective} [agentic-rig]"
    ```
 2. Push the branch to origin:
    ```bash
-   git push origin agent/{owner}/{task-slug}
+   git push origin {branch-name}
    ```
 3. Open a PR targeting the default branch (`main` or `master`):
    ```bash
    gh pr create \
      --base main \
-     --head agent/{owner}/{task-slug} \
+     --head {branch-name} \
      --title "{confirmed PR title}" \
      --body "{confirmed PR description}"
    ```
